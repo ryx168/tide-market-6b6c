@@ -27,6 +27,8 @@ jobs:
           node --check site/games/street-walk/game.js
           node --check site/games/street-walk/map.js
           node --check site/shared/level.js
+      - name: CJK font, so the stills show the 繁體中文 labels instead of boxes
+        run: sudo apt-get install -y -qq fonts-noto-cjk >/dev/null
       - name: Install puppeteer
         run: npm install --no-save puppeteer@23
       - name: Play one round under SwiftShader
