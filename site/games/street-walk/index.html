@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>老街漫步 RPG Street Walk | XO Tours 遊戲</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Tile-based dock-street walk through Liverpool (day 8 of tour 7622): visit four stalls, collect four tokens, board the ship.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <div id="hud">
+    <div class="id">
+      <img class="avatar" src="assets/player.webp" alt="" width="36" height="36">
+      <div>
+        <div class="title">老街漫步 Street Walk</div>
+        <div class="sub" id="hud-sub">利物浦碼頭街 Liverpool dock street</div>
+      </div>
+    </div>
+    <div class="stat">
+      <div>紀念幣 Tokens <span id="tokens"><i></i><i></i><i></i><i></i></span></div>
+      <div>時間 Time <b id="time">0.0</b> s</div>
+    </div>
+  </div>
+
+  <div id="stage">
+    <canvas id="canvas" width="640" height="480" aria-label="Dock street map"></canvas>
+    <canvas id="dof" width="640" height="480" aria-hidden="true"></canvas>
+    <div id="toast" role="status"></div>
+    <div id="dialog" hidden role="dialog">
+      <img class="portrait" id="dlg-portrait" alt="" width="72" height="72">
+      <div class="text">
+        <div class="who" id="dlg-who"></div>
+        <div class="line" id="dlg-line"></div>
+        <div class="next" id="dlg-next">點一下繼續 Tap to continue</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="controls">
+    <div id="dpad" aria-label="D-pad">
+      <button class="u" data-dir="up" aria-label="上 Up">▲</button>
+      <button class="l" data-dir="left" aria-label="左 Left">◀</button>
+      <button class="c" id="ok" aria-label="確定 OK">確定<br>OK</button>
+      <button class="r" data-dir="right" aria-label="右 Right">▶</button>
+      <button class="d" data-dir="down" aria-label="下 Down">▼</button>
+    </div>
+    <div id="side">
+      <button class="rm" id="rm-hud" type="button">減少動態 Reduce motion</button>
+      <div class="hint">方向鍵 / WASD / 點地圖走路<br>Arrows / WASD / tap map to walk<br>走進攤位開始對話<br>Walk into a stall to talk</div>
+    </div>
+  </div>
+
+  <div id="err" hidden></div>
+</div>
+
+<!-- Intro -->
+<div class="overlay art" id="intro">
+  <div class="box">
+    <h1>老街漫步 RPG Street Walk</h1>
+    <p id="intro-sub">載入中… Loading…</p>
+    <h2>怎麼玩 How to play</h2>
+    <p>用方向鍵、WASD 或螢幕上的方向盤在碼頭街上走動，也可以直接點地圖上的目的地。<br>
+    Walk the dock street with the arrow keys, WASD or the on-screen D-pad, or tap a spot on the map.</p>
+    <p>走進四個攤位各聊一段，收下一枚紀念幣；集滿四枚再走上船，回合結束。<br>
+    Walk into each of the four stalls to talk and take a token; with all four, board the ship to finish.</p>
+    <p>分數看時間：越快越高。對話時計時暫停。<br>
+    Score is by time: faster is better. The clock pauses while you read.</p>
+    <p class="note">今日種子 Today's seed: <span id="intro-seed">—</span>，同一天每個人走的是同一條街。<br>Same day, same street for everyone.</p>
+    <button class="rm" id="rm-intro" type="button">減少動態 Reduce motion</button>
+    <button class="btn" id="start" disabled>開始 Start</button>
+  </div>
+</div>
+
+<!-- End screen / stop card -->
+<div class="overlay art" id="end" hidden>
+  <div class="box">
+    <h1>到船了！ Aboard!</h1>
+    <div class="score"><span id="end-points">0</span><small>分 points</small></div>
+    <p id="end-detail"></p>
+    <p class="note" id="end-best"></p>
+
+    <div class="card">
+      <img id="card-img" alt="" loading="lazy">
+      <div class="body">
+        <div class="stop" id="card-stop"></div>
+        <div class="day" id="card-day"></div>
+        <div class="tour" id="card-tour"></div>
+        <div class="price" id="card-price"></div>
+      </div>
+    </div>
+
+    <button class="btn alt" id="again">再玩一次 Play again</button>
+    <a class="btn" id="see" href="#" target="_blank" rel="noopener">看這個行程 See this tour</a>
+  </div>
+</div>
+
+<script type="module" src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,777 @@
+{
+  "depositRate": 0.05,
+  "city": "歐洲",
+  "events": [
+    "倫敦",
+    "康瓦爾郡",
+    "科克",
+    "都柏林",
+    "貝爾法斯特",
+    "利物浦"
+  ],
+  "eventNameFull": "2027年 3/29 盛世公主號郵輪-愛爾蘭與英倫11天精華之遊",
+  "eventNameShort": "愛爾蘭與英倫11天精華之遊",
+  "durationDays": 11,
+  "durationNights": 9,
+  "durationText": "11天9晚",
+  "tags": [
+    {
+      "name": "32週年慶特惠",
+      "class": "gold"
+    },
+    {
+      "name": "盛世公主號郵輪",
+      "class": "teal"
+    },
+    {
+      "name": "愛爾蘭與英倫",
+      "class": "blue"
+    }
+  ],
+  "includesDescription": "給起中和中尼11天级强平事",
+  "dateFull": "2027-03-29 至 2027-04-08",
+  "dateShort": "2027年3月29日",
+  "price": 4099,
+  "limitText": "32週年慶特惠·盛世公主號郵輪",
+  "includesList": [
+    "洛杉磯往返機票",
+    "機票稅金",
+    "船票及稅金",
+    "陽台艙海景艙房",
+    "船上餐食",
+    "倫敦四星級酒店 2 晚",
+    "機場—碼頭接送"
+  ],
+  "videoSrc": "https://videos.xotours.ca/tour-intros/7622/master.m3u8",
+  "videoPoster": "/assets/img/yt-thumbs/cover_7622_1791414908077.png",
+  "decorateImage": "",
+  "pillBadgeText": "慶祝新聯華假期 32 週年・包遊輪陽台艙、包機票、包稅金 只要 US$4099 起",
+  "brandNameCn": "新聯華假期",
+  "brandNameEn": "XO TOURS",
+  "contact1Country": "美國",
+  "contact1Phone": "1.800.978.1788",
+  "contact2Country": "美國",
+  "contact2Phone": "626.618.0918",
+  "itinerary": [
+    {
+      "day": "第1天",
+      "title": "洛杉磯 ✈ 倫敦（夜宿飛機上）",
+      "description": "從原居地出發，乘坐豪華客機前往英國，夜宿飛機上。",
+      "breakfast": "—",
+      "lunch": "—",
+      "dinner": "—",
+      "hotel": "飛機上",
+      "image": "/assets/pdfs/7622/day_1.jpg",
+      "date": "3/29（一）"
+    },
+    {
+      "day": "第2天",
+      "title": "抵達倫敦，接機入住四星酒店",
+      "description": "抵達倫敦希斯洛機場，隨即專車接機返酒店休息。調整時差，為明天的旅遊作好準備！",
+      "breakfast": "—",
+      "lunch": "自理",
+      "dinner": "自理",
+      "hotel": "倫敦四星級酒店 或同級",
+      "image": "/assets/pdfs/7622/day_2.jpg",
+      "stops": [
+        {
+          "name": "倫敦 London",
+          "lat": 51.5074,
+          "lng": -0.1278,
+          "arrivalMode": "plane",
+          "pinIcon": "hotel",
+          "pinOnTop": true,
+          "aiScene": {
+            "panoramaUrl": "https://videos.xotours.ca/aiscene/7622/2-0-london/panorama.jpg",
+            "credit": {
+              "author": "XO Tours (AI-rendered scene)",
+              "license": null,
+              "via": null
+            },
+            "hotspots": [
+              {
+                "yaw": 0,
+                "pitch": 6,
+                "title": "大笨鐘與國會大廈 Big Ben",
+                "text": "泰晤士河畔的西敏宮與大笨鐘，是倫敦最經典的地標。第 2 天抵達倫敦後入住四星酒店，隔天安排半天市區遊。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/bigben.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": -42,
+                "pitch": 4,
+                "title": "倫敦眼 London Eye",
+                "text": "泰晤士河南岸的倫敦眼，高 135 公尺，是俯瞰倫敦市區的最佳位置之一。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/london_eye.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": 52,
+                "pitch": 2,
+                "title": "倫敦塔橋 Tower Bridge",
+                "text": "橫跨泰晤士河的倫敦塔橋，維多利亞時代的哥德式雙塔是倫敦的象徵。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/tower_bridge.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "date": "3/30（二）"
+    },
+    {
+      "day": "第3天",
+      "title": "倫敦半天市區遊 › 南安普敦登船（4:00PM 啟航）",
+      "description": "酒店早餐後，展開倫敦半天市區遊，約中午 12:00 前往南安普敦碼頭，登上 Majestic Princess 盛世公主號遊輪，展開愛爾蘭與英倫 11 天精華之旅。郵輪於下午 4:00PM 啟航。",
+      "breakfast": "酒店早餐",
+      "lunch": "遊輪上",
+      "dinner": "遊輪上",
+      "hotel": "盛世公主號（陽台艙）",
+      "image": "/assets/pdfs/7622/day_3.jpg",
+      "stops": [
+        {
+          "name": "倫敦 市區遊 London",
+          "lat": 51.5014,
+          "lng": -0.1419,
+          "arrivalMode": "bus",
+          "pinOnTop": false
+        },
+        {
+          "name": "南安普敦 登船 Southampton",
+          "lat": 50.9097,
+          "lng": -1.4044,
+          "arrivalMode": "bus",
+          "pinOnTop": true
+        }
+      ],
+      "date": "3/31（三）"
+    },
+    {
+      "day": "第4天",
+      "title": "康瓦爾郡・法爾茂斯（接駁小船）",
+      "description": "靠港 7:00AM–6:00PM・岸上行程自費。康瓦爾郡是大不列顛島西南端的半島，英國英格蘭西南端的郡份。康瓦爾東與德文郡相鄰，南臨英吉利海峽，西、北臨大西洋。法爾茂斯是英國西南部康瓦爾郡一個民政教區和海港，位於法爾河河口，南濱法爾茂斯灣，為天然深水良港，造船業和旅遊業發達。康瓦爾皇家遊艇俱樂部位於此地。",
+      "breakfast": "遊輪上",
+      "lunch": "遊輪上",
+      "dinner": "遊輪上",
+      "hotel": "盛世公主號（陽台艙）",
+      "image": "/assets/pdfs/7622/day_4.jpg",
+      "stops": [
+        {
+          "name": "康瓦爾郡・法爾茂斯 Falmouth",
+          "lat": 50.153,
+          "lng": -5.07,
+          "arrivalMode": "ship",
+          "pinOnTop": true,
+          "aiScene": {
+            "panoramaUrl": "https://videos.xotours.ca/aiscene/7622/4-0-falmouth/panorama.jpg",
+            "credit": {
+              "author": "XO Tours (AI-rendered scene)",
+              "license": null,
+              "via": null
+            },
+            "hotspots": [
+              {
+                "yaw": 0,
+                "pitch": 4,
+                "title": "康瓦爾郡海岸 Cornwall",
+                "text": "英格蘭西南端的康瓦爾郡：壯麗的海岸懸崖與燈塔。法爾茂斯是法爾河口的天然深水良港，以接駁小船上岸。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/cornwall_cliffs.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": -48,
+                "pitch": 0,
+                "title": "康瓦爾海灘 Cornish beach",
+                "text": "金色沙灘與湛藍海水，港邊是色彩繽紛的漁村街道，康瓦爾皇家遊艇俱樂部也在此。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/cornwall_beach.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "date": "4/1（四）"
+    },
+    {
+      "day": "第5天",
+      "title": "愛爾蘭・科克（科夫）— 巴拉梅城堡",
+      "description": "靠港 7:00AM–6:00PM・岸上行程自費，可自費前往巴拉梅城堡 Blarney Castle。科克是愛爾蘭共和國的第二大城市和愛爾蘭島的第三大城市（位於都柏林和貝爾法斯特之後）。它是科克郡的主要城市和行政中心，也是芒斯特省最大的城市。科夫是愛爾蘭科克郡南海岸的海港城鎮，位於科克灣大島的南側，並與穗島、浩爾柏洛島隔海相望。鎮上的聖科曼大教堂，是愛爾蘭和克萊恩教區最高的建築物之一。",
+      "breakfast": "遊輪上",
+      "lunch": "遊輪上",
+      "dinner": "遊輪上",
+      "hotel": "盛世公主號（陽台艙）",
+      "image": "/assets/pdfs/7622/day_5.jpg",
+      "stops": [
+        {
+          "name": "科克（科夫）Cork / Cobh",
+          "lat": 51.85,
+          "lng": -8.29,
+          "arrivalMode": "ship",
+          "pinOnTop": true,
+          "aiScene": {
+            "panoramaUrl": "https://videos.xotours.ca/aiscene/7622/5-0-cork/panorama.jpg",
+            "credit": {
+              "author": "XO Tours (AI-rendered scene)",
+              "license": null,
+              "via": null
+            },
+            "hotspots": [
+              {
+                "yaw": 0,
+                "pitch": 8,
+                "title": "聖芬巴大教堂 St Fin Barre's",
+                "text": "科克的地標，三座尖塔的哥德復興式大教堂，可俯瞰整座城市與利河。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/cork_cathedral.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": 46,
+                "pitch": 0,
+                "title": "科克市區 Cork city",
+                "text": "愛爾蘭第二大城，河岸與老城街道；可自費前往以「雄辯之石」聞名的巴拉梅城堡。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/cork_cathedral2.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "date": "4/2（五）"
+    },
+    {
+      "day": "第6天",
+      "title": "都柏林（鄧萊里，接駁小船）",
+      "description": "靠港 7:00AM–7:00PM・岸上行程自費。都柏林市是愛爾蘭共和國首都、都柏林郡郡治以及最大的城市，靠近愛爾蘭島東岸的中心點，位處都柏林郡的利菲河河口、都柏林地區的中心。都柏林自中世紀以來一直是愛爾蘭首都城市，由於很多高技術企業聚集，亦有「歐洲的硅谷」之稱。鄧萊里是都柏林地區鄧萊里—拉斯當郡的一個海濱小鎮，位於都柏林以南 12 公里，作為都柏林的港口建立於 1816 年。",
+      "breakfast": "遊輪上",
+      "lunch": "遊輪上",
+      "dinner": "遊輪上",
+      "hotel": "盛世公主號（陽台艙）",
+      "image": "/assets/pdfs/7622/day_6.jpg",
+      "stops": [
+        {
+          "name": "都柏林（鄧萊里）Dublin",
+          "lat": 53.3498,
+          "lng": -6.2603,
+          "arrivalMode": "ship",
+          "pinOnTop": true,
+          "aiScene": {
+            "panoramaUrl": "https://videos.xotours.ca/aiscene/7622/6-0-dublin/panorama.jpg",
+            "credit": {
+              "author": "XO Tours (AI-rendered scene)",
+              "license": null,
+              "via": null
+            },
+            "hotspots": [
+              {
+                "yaw": 0,
+                "pitch": 4,
+                "title": "半便士橋 Ha'penny Bridge",
+                "text": "利菲河上的鑄鐵行人橋，1816 年啟用，是都柏林的象徵。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/dublin_night.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": -45,
+                "pitch": 2,
+                "title": "都柏林城堡 Dublin Castle",
+                "text": "自中世紀以來的權力中心，庭院與國事廳見證八百年的愛爾蘭歷史。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/dublin_castle.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": 48,
+                "pitch": 2,
+                "title": "三一學院圖書館 Trinity College",
+                "text": "收藏《凱爾經》的長廳圖書館，木質穹頂書架是都柏林最著名的室內景觀。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/trinity.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "date": "4/3（六）"
+    },
+    {
+      "day": "第7天",
+      "title": "北愛爾蘭・貝爾法斯特",
+      "description": "靠港 7:30AM–8:00PM・岸上行程自費。北愛爾蘭是英國的組成部分，位於愛爾蘭島東北部，西部和南部與愛爾蘭共和國保持著邊境開放。貝爾法斯特位於愛爾蘭島東北沿海的拉根河口，在貝爾法斯特灣的西南側，是英國北愛爾蘭最大的城市和港口，也是愛爾蘭島的第二大城市，僅次於都柏林。",
+      "breakfast": "遊輪上",
+      "lunch": "遊輪上",
+      "dinner": "遊輪上",
+      "hotel": "盛世公主號（陽台艙）",
+      "image": "/assets/pdfs/7622/day_7.jpg",
+      "stops": [
+        {
+          "name": "貝爾法斯特 Belfast",
+          "lat": 54.5973,
+          "lng": -5.9301,
+          "arrivalMode": "ship",
+          "pinOnTop": true,
+          "aiScene": {
+            "panoramaUrl": "https://videos.xotours.ca/aiscene/7622/7-0-belfast/panorama.jpg",
+            "credit": {
+              "author": "XO Tours (AI-rendered scene)",
+              "license": null,
+              "via": null
+            },
+            "hotspots": [
+              {
+                "yaw": 0,
+                "pitch": 6,
+                "title": "貝爾法斯特市政廳 City Hall",
+                "text": "北愛爾蘭首府的地標，綠色銅頂的巴洛克復興式建築。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/belfast_cityhall.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": -50,
+                "pitch": 2,
+                "title": "鐵達尼號博物館 Titanic Belfast",
+                "text": "建在鐵達尼號建造船塢原址上的博物館，外形取自船首。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/titanic_belfast.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": 50,
+                "pitch": 0,
+                "title": "大教堂區街頭壁畫 Cathedral Quarter",
+                "text": "紅磚巷弄間的大型街頭壁畫，是貝爾法斯特最有活力的文化區。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/belfast_mural.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "date": "4/4（日）"
+    },
+    {
+      "day": "第8天",
+      "title": "利物浦",
+      "description": "靠港 9:00AM–7:00PM・岸上行程自費。利物浦是英格蘭西北部著名港口城市，為默西賽德都市郡的 5 個自治市之一。1207 年以自治市鎮的身份成立，1880 年獲得城市地位。利物浦市區的人口約為 2,200,000，是英國第四大城市。",
+      "breakfast": "遊輪上",
+      "lunch": "遊輪上",
+      "dinner": "遊輪上",
+      "hotel": "盛世公主號（陽台艙）",
+      "image": "/assets/pdfs/7622/day_8.jpg",
+      "stops": [
+        {
+          "name": "利物浦 Liverpool",
+          "lat": 53.4084,
+          "lng": -2.9916,
+          "arrivalMode": "ship",
+          "pinOnTop": true,
+          "aiScene": {
+            "panoramaUrl": "https://videos.xotours.ca/aiscene/7622/8-0-liverpool/panorama.jpg",
+            "credit": {
+              "author": "XO Tours (AI-rendered scene)",
+              "license": null,
+              "via": null
+            },
+            "hotspots": [
+              {
+                "yaw": 0,
+                "pitch": 4,
+                "title": "阿爾伯特碼頭 Albert Dock",
+                "text": "世界文化遺產的紅磚倉庫群，默西河畔的利物浦門面。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/liverpool_dock.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": -46,
+                "pitch": 2,
+                "title": "洞穴俱樂部 The Cavern Club",
+                "text": "馬修街上的洞穴俱樂部，披頭四早年在此演出近 300 場。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/cavern_club.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "date": "4/5（一）"
+    },
+    {
+      "day": "第9天",
+      "title": "海上巡遊",
+      "description": "今天郵輪將在海上巡遊。您可以前往健身中心，有最新潮的健身器材和專業課程可以選擇；健康中心還提供水療和按摩服務，並有健康食品提供。賭場、賓果遊戲、免稅商店、日光浴、美容院、SPA 都是熱點，夜晚盛裝參與晚宴，盡享豐盛美食並觀賞多姿多彩的娛樂節目。",
+      "breakfast": "遊輪上",
+      "lunch": "遊輪上",
+      "dinner": "遊輪上",
+      "hotel": "盛世公主號（陽台艙）",
+      "image": "/assets/pdfs/7622/day_9.jpg",
+      "stops": [
+        {
+          "name": "海上巡遊 At Sea",
+          "lat": 50.6,
+          "lng": -5.6,
+          "arrivalMode": "ship",
+          "pinOnTop": true,
+          "aiScene": {
+            "panoramaUrl": "https://videos.xotours.ca/aiscene/7622/9-0-at-sea/panorama.mp4",
+            "credit": {
+              "author": "XO Tours (AI-rendered scene)",
+              "license": null,
+              "via": null
+            },
+            "hotspots": [
+              {
+                "yaw": 0,
+                "pitch": 2,
+                "title": "盛世公主號 Majestic Princess",
+                "text": "公主郵輪旗下的盛世公主號，全程入住 BW 陽台艙，船上超過 20 處餐飲與娛樂設施。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/ship_aerial.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": -50,
+                "pitch": 0,
+                "title": "陽台艙 Balcony Stateroom",
+                "text": "推開落地窗即是大西洋海景；可加價升等 9/10 層無遮擋 BE 陽台艙。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/cabin.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              },
+              {
+                "yaw": 50,
+                "pitch": 0,
+                "title": "郵輪美食 Dining",
+                "text": "龍蝦、精緻甜點與各國料理，船上多間餐廳提供全日豐盛美食。",
+                "imageUrl": "https://videos.xotours.ca/aiscene/7622/_img/lobster.jpg",
+                "videoUrl": null,
+                "credit": {
+                  "author": "XO Tours (AI-rendered scene)",
+                  "license": null,
+                  "via": null
+                }
+              }
+            ],
+            "videoPanorama": true
+          }
+        }
+      ],
+      "date": "4/6（二）"
+    },
+    {
+      "day": "第10天",
+      "title": "南安普敦下船 › 倫敦四星酒店",
+      "description": "今天早上 7:00AM 郵輪抵達南安普敦港口，下船後專車前往倫敦，入住酒店。（當日行程細節待定）",
+      "breakfast": "遊輪上",
+      "lunch": "待定",
+      "dinner": "待定",
+      "hotel": "倫敦四星級酒店 或同級",
+      "image": "/assets/pdfs/7622/day_10.jpg",
+      "stops": [
+        {
+          "name": "南安普敦 下船 Southampton",
+          "lat": 50.9097,
+          "lng": -1.4044,
+          "arrivalMode": "ship",
+          "pinOnTop": true
+        },
+        {
+          "name": "倫敦 London",
+          "lat": 51.5074,
+          "lng": -0.1278,
+          "arrivalMode": "bus",
+          "pinIcon": "hotel",
+          "pinOnTop": false
+        }
+      ],
+      "date": "4/7（三）"
+    },
+    {
+      "day": "第11天",
+      "title": "倫敦 ✈ 返回洛杉磯",
+      "description": "早晨用過早餐後，專車送機，結束這趟難忘的愛爾蘭與英倫郵輪之旅，帶著滿滿的回憶，返回溫暖的家。",
+      "breakfast": "酒店早餐",
+      "lunch": "—",
+      "dinner": "—",
+      "hotel": "—",
+      "image": "/assets/pdfs/7622/day_11.jpg",
+      "date": "4/8（四）"
+    }
+  ],
+  "hotelInfoList": [
+    "倫敦（登船前）：倫敦四星級酒店 或同級",
+    "郵輪上：Majestic Princess 盛世公主號 BW Balcony Stateroom (Obstructed View) 陽台艙（可加價升等 BE Balcony 無遮擋，9/10 層）",
+    "倫敦（下船後）：倫敦四星級酒店 或同級"
+  ],
+  "departureDates": [
+    "2027年03月29日"
+  ],
+  "priceTable": [
+    {
+      "format": "raw_html",
+      "html": "<div class=\"table-responsive mb-4\" style=\"margin-bottom: 25px;\">\n    <div style=\"border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 20px; margin-bottom: 15px;\">\n        <div class=\"h5\" style=\"color: #2F747D; margin: 0; font-weight: bold;\">Tour code : SOT#2094010-40 (11天9晚) 價目表 (美元)</div>\n        <div style=\"color:#c0392b; font-weight:bold; margin-top:8px;\">號外！號外！慶祝新聯華假期 32 週年 — 包遊輪(陽台艙)、包機票、包稅金，只要 US$4099 起！</div>\n    </div>\n    <table class=\"table table-bordered table-striped\" style=\"text-align: center; vertical-align: middle; background-color: #fff; font-size: 14px;\">\n        <thead style=\"background-color: #f1f1f1; color: #333;\">\n            <tr>\n                <th style=\"vertical-align: middle;\">日期區間</th>\n                <th style=\"vertical-align: middle;\">雙人房 (每位)<br>陽台艙 BW Balcony Stateroom<br>(Obstructed View)</th>\n                <th style=\"vertical-align: middle;\">雙人房 (每位)<br>陽台艙 BE Balcony Stateroom<br>(無遮擋，可選 9/10 層)</th>\n                <th style=\"vertical-align: middle;\">單人房補差價<br>(Balcony Stateroom, Obstructed View)</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <td style=\"vertical-align: middle; font-weight: bold;\">標準團期<br><span style=\"font-size:12px; font-weight:normal; color:#666;\">2027年 3/29 出發</span></td>\n                <td><span class=\"add-to-cart-btn text-danger\" data-variant=\"標準團期\" style=\"cursor:pointer; display:inline-block;\" data-xo-soldout-onclick=\"window.addToCart('盛世公主號愛爾蘭與英倫11天', '標準團期 - 雙人房 (每位，陽台艙 BW Obstructed View) - 總價 $4099', this, 4099, 1)\"><span style=\"color:#333; font-weight:bold;\">4099</span> <i class=\"fas fa-cart-plus\" style=\"margin-left:5px;\"></i></span></td>\n                <td><span class=\"add-to-cart-btn text-danger\" data-variant=\"標準團期\" style=\"cursor:pointer; display:inline-block;\" data-xo-soldout-onclick=\"window.addToCart('盛世公主號愛爾蘭與英倫11天', '標準團期 - 雙人房 (每位，陽台艙 BE 無遮擋) - 總價 $4299', this, 4299, 1)\"><span style=\"color:#333; font-weight:bold;\">4299</span> <i class=\"fas fa-cart-plus\" style=\"margin-left:5px;\"></i></span></td>\n                <td><span class=\"add-to-cart-btn text-danger\" data-variant=\"標準團期\" style=\"cursor:pointer; display:inline-block;\" data-xo-soldout-onclick=\"window.addToCart('盛世公主號愛爾蘭與英倫11天', '標準團期 - 單人房補差價 - 總價 $2999', this, 2999, 1)\"><span style=\"color:#333; font-weight:bold;\">2999</span> <i class=\"fas fa-cart-plus\" style=\"margin-left:5px;\"></i></span></td>\n            </tr>\n        </tbody>\n    </table>\n    <p style=\"font-size:13px; color:#666; margin-top:8px;\">〔價格隨時變動，請以定團日為准〕</p>\n    <p style=\"font-size:13px; color:#333;\"><strong>團費包括：</strong>全程洛杉磯往返機票 + 機票稅金 + 船票及稅金 + 船上餐食 + 英國酒店四星級 2 晚、2 次早餐及 1 次午餐、1 次晚餐 + 機場—碼頭接機送機。</p>\n    <p style=\"font-size:13px; color:#c0392b;\"><strong>團費不包括：</strong>郵輪岸上行程（每站岸上行程均為自費選購）。</p>\n</div>"
+    }
+  ],
+  "features": [
+    "★ 慶祝新聯華假期 32 週年！號外！號外！包遊輪(陽台艙)、包機票、包稅金，只要 US$4099 起！",
+    "01. 搭乘公主郵輪旗下 Majestic Princess 盛世公主號，一次暢遊英格蘭、愛爾蘭、北愛爾蘭三地；",
+    "02. 陽台艙海景體驗，盡享郵輪度假奢華，可加價升等無遮擋 BE 陽台艙（9/10 層）；",
+    "03. 倫敦半天市區遊，登船前後各入住倫敦四星級酒店；",
+    "04. 停靠康瓦爾郡法爾茂斯、愛爾蘭科克（科夫）、都柏林（鄧萊里）、北愛爾蘭貝爾法斯特、利物浦，每站可自費選購岸上行程；",
+    "05. 全程洛杉磯往返機票、機票稅金、船票及稅金、船上餐食全包。"
+  ],
+  "tourVariants": [
+    {
+      "label": "標準團期",
+      "durationDays": 11,
+      "departureDates": [
+        "2027.03 29"
+      ],
+      "priceNote": "標準團期：2027年 3/29 出發"
+    }
+  ],
+  "prices": [
+    {
+      "optionName": "標準團期 - 雙人房 (每位，陽台艙 BW Obstructed View)",
+      "price": 4099,
+      "type": "tour_variant"
+    },
+    {
+      "optionName": "標準團期 - 雙人房 (每位，陽台艙 BE 無遮擋)",
+      "price": 4299,
+      "type": "tour_variant"
+    },
+    {
+      "optionName": "標準團期 - 單人房補差價",
+      "price": 2999,
+      "type": "tour_variant"
+    }
+  ],
+  "seo": {
+    "title": "2027年 3/29 盛世公主號郵輪-愛爾蘭與英倫11天精華之遊 - 新聯華假期 XO TOURS",
+    "description": "新聯華假期 (XO TOURS) 慶祝 32 週年特惠：盛世公主號 Majestic Princess 郵輪愛爾蘭與英倫 11 天精華之遊，2027年3月29日出發。倫敦、康瓦爾郡法爾茂斯、愛爾蘭科克與都柏林、北愛爾蘭貝爾法斯特、利物浦。含洛杉磯往返機票、陽台艙、倫敦四星酒店 2 晚，只要 US$4099 起。",
+    "keywords": "新聯華假期, XO TOURS, 華人旅行社, 32週年慶, 盛世公主號, Majestic Princess, 公主郵輪, 愛爾蘭, 英國, 倫敦, 都柏林, 貝爾法斯特, 利物浦, 康瓦爾, 科克, 郵輪假期",
+    "ogTitle": "2027年 3/29 盛世公主號郵輪-愛爾蘭與英倫11天精華之遊 - 新聯華假期 XO TOURS",
+    "ogDescription": "新聯華假期 (XO TOURS) 慶祝 32 週年特惠：盛世公主號 Majestic Princess 郵輪愛爾蘭與英倫 11 天精華之遊，2027年3月29日出發。倫敦、康瓦爾郡法爾茂斯、愛爾蘭科克與都柏林、北愛爾蘭貝爾法斯特、利物浦。含洛杉磯往返機票、陽台艙、倫敦四星酒店 2 晚，只要 US$4099 起。",
+    "ogUrl": "/7622/2027%E5%B9%B4%203-29%20%E7%9B%9B%E4%B8%96%E5%85%AC%E4%B8%BB%E8%99%9F%E9%83%B5%E8%BC%AA-%E6%84%9B%E7%88%BE%E8%98%AD%E8%88%87%E8%8B%B1%E5%80%AB11%E5%A4%A9%E7%B2%BE%E8%8F%AF%E4%B9%8B%E9%81%8A",
+    "ogType": "website",
+    "ogImage": "/assets/pdfs/7622/cover.jpg",
+    "robots": "index, follow",
+    "favicon": "/favicon.ico"
+  },
+  "seo_title": "2027年 3/29 盛世公主號郵輪-愛爾蘭與英倫11天精華之遊 - 新聯華假期 XO TOURS",
+  "seo_desc": "新聯華假期 (XO TOURS) 慶祝 32 週年特惠：盛世公主號 Majestic Princess 郵輪愛爾蘭與英倫 11 天精華之遊，2027年3月29日出發。倫敦、康瓦爾郡法爾茂斯、愛爾蘭科克與都柏林、北愛爾蘭貝爾法斯特、利物浦。含洛杉磯往返機票、陽台艙、倫敦四星酒店 2 晚，只要 US$4099 起。",
+  "seo_keywords": "新聯華假期, XO TOURS, 華人旅行社, 32週年慶, 盛世公主號, Majestic Princess, 公主郵輪, 愛爾蘭, 英國, 倫敦, 都柏林, 貝爾法斯特, 利物浦, 康瓦爾, 科克, 郵輪假期",
+  "seo_og_title": "2027年 3/29 盛世公主號郵輪-愛爾蘭與英倫11天精華之遊 - 新聯華假期 XO TOURS",
+  "seo_og_desc": "新聯華假期 (XO TOURS) 慶祝 32 週年特惠：盛世公主號 Majestic Princess 郵輪愛爾蘭與英倫 11 天精華之遊，2027年3月29日出發。倫敦、康瓦爾郡法爾茂斯、愛爾蘭科克與都柏林、北愛爾蘭貝爾法斯特、利物浦。含洛杉磯往返機票、陽台艙、倫敦四星酒店 2 晚，只要 US$4099 起。",
+  "seo_og_url": "/7622/2027%E5%B9%B4%203-29%20%E7%9B%9B%E4%B8%96%E5%85%AC%E4%B8%BB%E8%99%9F%E9%83%B5%E8%BC%AA-%E6%84%9B%E7%88%BE%E8%98%AD%E8%88%87%E8%8B%B1%E5%80%AB11%E5%A4%A9%E7%B2%BE%E8%8F%AF%E4%B9%8B%E9%81%8A",
+  "seo_og_type": "website",
+  "seo_og_image": "/assets/pdfs/7622/cover.jpg",
+  "seo_robots": "index, follow",
+  "seo_favicon": "/favicon.ico",
+  "shortVideoSrc": "https://videos.xotours.ca/tour-intros/7622/short/master.m3u8",
+  "extraVideos": [
+    "https://videos.xotours.ca/tour-intros/7622/extra_0/master.m3u8",
+    "https://videos.xotours.ca/tour-intros/7622/extra_1/master.m3u8"
+  ],
+  "products_description": "",
+  "youtubeId": "e5qsjPXNUmQ, c44ibioi5Xw, gRW6rcikYQI, zftMsmo7fV0",
+  "page_type": "",
+  "soldOut": false,
+  "bookable": true,
+  "hideFromCalendar": false,
+  "hideDownload": false,
+  "products_url": "/assets/pdfs/7622/tour_7622.pdf",
+  "download_url": "/assets/pdfs/7622/tour_7622.pdf",
+  "baseDir": "/assets/pdfs/7622/",
+  "tourCode": "SOT#2094010-40",
+  "image": "/assets/pdfs/7622/cover.jpg",
+  "heroPanoramas": [
+    {
+      "title": "倫敦 London",
+      "url": "https://videos.xotours.ca/aiscene/7622/2-0-london/panorama.jpg",
+      "video": false,
+      "duration": 20,
+      "hotspots": []
+    },
+    {
+      "title": "康瓦爾郡・法爾茂斯 Falmouth",
+      "url": "https://videos.xotours.ca/aiscene/7622/4-0-falmouth/panorama.jpg",
+      "video": false,
+      "duration": 20,
+      "hotspots": []
+    },
+    {
+      "title": "科克（科夫）Cork / Cobh",
+      "url": "https://videos.xotours.ca/aiscene/7622/5-0-cork/panorama.jpg",
+      "video": false,
+      "duration": 20,
+      "hotspots": []
+    },
+    {
+      "title": "都柏林（鄧萊里）Dublin",
+      "url": "https://videos.xotours.ca/aiscene/7622/6-0-dublin/panorama.jpg",
+      "video": false,
+      "duration": 20,
+      "hotspots": []
+    },
+    {
+      "title": "貝爾法斯特 Belfast",
+      "url": "https://videos.xotours.ca/aiscene/7622/7-0-belfast/panorama.jpg",
+      "video": false,
+      "duration": 20,
+      "hotspots": []
+    },
+    {
+      "title": "利物浦 Liverpool",
+      "url": "https://videos.xotours.ca/aiscene/7622/8-0-liverpool/panorama.jpg",
+      "video": false,
+      "duration": 20,
+      "hotspots": []
+    },
+    {
+      "title": "海上巡遊 At Sea",
+      "url": "https://videos.xotours.ca/aiscene/7622/9-0-at-sea/panorama.mp4",
+      "video": true,
+      "duration": 20,
+      "hotspots": []
+    },
+    {
+      "title": "陽台艙 Balcony Stateroom",
+      "url": "https://videos.xotours.ca/aiscene/7622/cabin/panorama.jpg",
+      "video": false,
+      "duration": 20,
+      "hotspots": []
+    }
+  ],
+  "coverPlaylist": [
+    {
+      "type": "video",
+      "src": "https://videos.xotours.ca/tour-intros/7622/master.m3u8"
+    },
+    {
+      "type": "map",
+      "src": "map:tour",
+      "label": "行程地圖"
+    },
+    {
+      "type": "map",
+      "src": "map:city",
+      "label": "城市地圖"
+    },
+    {
+      "type": "map",
+      "src": "map:pano:0"
+    },
+    {
+      "type": "map",
+      "src": "map:pano:1"
+    },
+    {
+      "type": "map",
+      "src": "map:pano:2"
+    },
+    {
+      "type": "map",
+      "src": "map:pano:3"
+    },
+    {
+      "type": "map",
+      "src": "map:pano:4"
+    },
+    {
+      "type": "map",
+      "src": "map:pano:5"
+    },
+    {
+      "type": "map",
+      "src": "map:pano:6"
+    },
+    {
+      "type": "map",
+      "src": "map:pano:7"
+    }
+  ],
+  "reasonSlides": {
+    "1": "https://videos.xotours.ca/tour-intros/7622/master.m3u8"
+  }
+}
