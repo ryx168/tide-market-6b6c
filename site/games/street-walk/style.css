@@ -108,7 +108,7 @@ button { font-family: inherit; }
 .overlay[hidden] { display: none; }           /* [hidden] must beat display:flex */
 .overlay.art {
   background: linear-gradient(180deg, rgba(14, 16, 24, 0.82) 0%, rgba(14, 16, 24, 0.94) 60%, #16181d 100%),
-              url("assets/keyart.webp") center / cover no-repeat #16181d;
+              var(--keyart, none) center / cover no-repeat #16181d;
 }
 .overlay .box { max-width: 420px; width: 100%; }
 .overlay h1 { font-size: 20px; margin: 4px 0 2px; text-shadow: 0 2px 8px #000; }
@@ -136,3 +136,11 @@ button { font-family: inherit; }
 .card .price b { color: #fff; font-size: 16px; }
 
 #err { color: #ff8a80; font-size: 13px; padding: 10px 14px; white-space: pre-wrap; }
+
+/* Port picker on the intro */
+.ports { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.ports .port {
+  display: inline-block; padding: 7px 10px; border-radius: 8px; font-size: 12px; text-decoration: none;
+  background: #20242b; border: 1px solid #3a3f47; color: #e6e8ec;
+}
+.ports .port.on { background: #EF7B45; border-color: #EF7B45; color: #fff; font-weight: 700; }

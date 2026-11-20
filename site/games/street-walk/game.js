@@ -25,8 +25,45 @@ const TOUR_ID = 7622;
 const BASE = '../..';
 const SITE = 'https://www.xotours.net';
 const GAME = 'street-walk';
-const DAY_INDEX = 7;             // day 8 (0-based)
 const TILE = 32;
+
+/*
+ * One level per port day of tour 7622 that has a 360 scene with hotspots.
+ * The map generator and the game loop are shared; a level only changes how
+ * the street looks and what stands in it:
+ *   styles   which facade styles the seeded building spans draw from
+ *   time     'day' | 'dusk' | 'night': light-map base, lamp strength, lit windows
+ *   weather  'clear' | 'rain'
+ *   water    hsl hue, saturation, lightness of the sea or river
+ *   vessel   'liner' (the cruise ship), 'tender' (shore boat), 'riverboat'
+ *   landmark drawn over the roofs in the two left-most columns
+ *   goods    what each stall sells, by vendor index (hotspots first, then
+ *            the description sentences, same order as buildVendors)
+ * Portraits and key art live in assets/<key>/. Facts on screen still come
+ * only from the tour JSON; the look is decoration.
+ */
+const LEVELS = {
+    2: { key: 'day2', time: 'dusk', weather: 'clear', water: [200, 30, 26], vessel: 'riverboat', landmark: 'clocktower',
+        styles: ['sandstone', 'brick', 'stone', 'sandstone', 'brickDark'], goods: ['umbrellas', 'tickets', 'flowers', 'tea'] },
+    4: { key: 'day4', time: 'day', weather: 'clear', water: [182, 55, 38], vessel: 'tender', landmark: 'lighthouse',
+        styles: ['pastelPink', 'pastelBlue', 'pastelYellow', 'whitewash', 'pastelMint'], goods: ['shells', 'pasties', 'notices', 'ropes'] },
+    5: { key: 'day5', time: 'dusk', weather: 'rain', water: [205, 25, 24], vessel: 'liner', landmark: 'spires',
+        styles: ['pastelPink', 'pastelBlue', 'pastelYellow', 'pastelMint', 'pastelLilac'], goods: ['bells', 'fish', 'notices', 'tweed'] },
+    6: { key: 'day6', time: 'night', weather: 'clear', water: [215, 40, 20], vessel: 'tender', landmark: 'castle',
+        styles: ['georgian', 'georgian', 'brickDark', 'georgian', 'stone'], goods: ['whistles', 'maps', 'books', 'ropes'] },
+    7: { key: 'day7', time: 'dusk', weather: 'clear', water: [205, 35, 24], vessel: 'liner', landmark: 'dome',
+        styles: ['brick', 'brickDark', 'brick', 'stone', 'mural'], goods: ['keys', 'tools', 'paints', 'notices'] },
+    8: { key: 'day8', time: 'dusk', weather: 'clear', water: [204, 52, 23], vessel: 'liner', landmark: 'liver',
+        styles: ['brick', 'timber', 'stone', 'brickPlum', 'stucco'], goods: ['fish', 'records', 'notices', 'maps'] },
+};
+const LEVEL_DAYS = Object.keys(LEVELS).map(Number);
+const DAY_NUM = (() => {
+    const d = Number(new URLSearchParams(location.search).get('day'));
+    return LEVELS[d] ? d : 8;
+})();
+const LV = LEVELS[DAY_NUM];
+const DAY_INDEX = DAY_NUM - 1;
+const ASSET_DIR = `assets/${LV.key}`;
 const MOVE_MS = 130;             // one tile, the player
 const NPC_MS = 460;              // one tile, a townsperson
 const RM_KEY = 'xo-reduce-motion';
@@ -54,7 +91,7 @@ const el = {
 // ---------- state ----------
 const S = {
     level: null, day: null, stop: null, price: null, look: null,
-    seed: dailySeed(), map: null, vendors: [],
+    seed: (dailySeed() + DAY_NUM * 7919) >>> 0, map: null, vendors: [],   // each port gets its own street, same for everyone that day
     phase: 'intro',                       // intro | play | dialog | end
     player: { x: 0, y: 0, fx: 0, fy: 0, dir: 'right', moving: null },
     held: [],                             // directions, last pressed last
@@ -318,7 +355,7 @@ function openStall(idx) {
     timerPause();
     S.dialog = { vendor, stallIdx: idx, line: 0, shown: 0, t0: now() };
     el.dlgWho.textContent = vendor.name;
-    el.dlgPortrait.src = `assets/vendor${stall.content}.webp`;
+    el.dlgPortrait.src = `${ASSET_DIR}/vendor${stall.content}.webp`;
     el.dlgPortrait.alt = vendor.name;
     el.dialog.hidden = false;
     renderDialogLine();
@@ -378,9 +415,9 @@ function finishRound() {
     const seconds = elapsedMs() / 1000;
     const timeBonus = Math.max(0, 2000 - Math.floor(seconds) * 10);
     const points = S.score.get().points + timeBonus;
-    const run = { game: GAME, tourId: String(TOUR_ID), seed: S.seed, points, seconds: Math.round(seconds * 10) / 10, tokens: 4, steps: S.steps };
+    const run = { game: GAME, tourId: String(TOUR_ID), day: DAY_NUM, seed: S.seed, points, seconds: Math.round(seconds * 10) / 10, tokens: 4, steps: S.steps };
     saveRun(run);
-    const best = loadRuns().filter((r) => r.game === GAME).reduce((m, r) => Math.max(m, Number(r.points) || 0), 0);
+    const best = loadRuns().filter((r) => r.game === GAME && (r.day || 8) === DAY_NUM).reduce((m, r) => Math.max(m, Number(r.points) || 0), 0);
     el.endPoints.textContent = String(points);
     el.endDetail.textContent = `時間 ${run.seconds} 秒・${S.steps} 步・時間加分 ${timeBonus}　Time ${run.seconds} s, ${S.steps} steps, time bonus ${timeBonus}`;
     el.endBest.textContent = `本機最佳 Best on this device: ${best}`;
@@ -407,6 +444,31 @@ function fillCard() {
     el.cardImg.onerror = () => { el.cardImg.onerror = null; el.cardImg.src = `${SITE}/assets/pdfs/${TOUR_ID}/cover.jpg`; };
     if (img) el.cardImg.src = img;
     el.see.href = lv.tourUrl ? SITE + lv.tourUrl : SITE;
+}
+
+// ---------- port picker ----------
+/** The six ports as links (?day=N), on the intro; the next port on the end card. */
+function renderPorts(level) {
+    const name = (d) => {
+        const day = level.days[d - 1];
+        const st = day && (day.stops.find((x) => x.aiScene) || day.stops[0]);
+        return st ? st.name : `Day ${d}`;
+    };
+    const wrap = $('ports');
+    if (wrap) {
+        wrap.innerHTML = '';
+        for (const d of LEVEL_DAYS) {
+            const a = document.createElement('a');
+            a.href = `?day=${d}`;
+            a.className = 'port' + (d === DAY_NUM ? ' on' : '');
+            a.textContent = `第 ${d} 天 ${name(d)}`;
+            if (d === DAY_NUM) a.setAttribute('aria-current', 'page');
+            wrap.append(a);
+        }
+    }
+    const next = LEVEL_DAYS[(LEVEL_DAYS.indexOf(DAY_NUM) + 1) % LEVEL_DAYS.length];
+    const nx = $('next');
+    if (nx) { nx.href = `?day=${next}`; nx.textContent = `下一站 Next port：${name(next)}`; }
 }
 
 // ---------- HUD ----------
@@ -443,16 +505,41 @@ function rr(c, x, y, w, h, r) {
 }
 function ellipse(c, x, y, rx, ry) { c.beginPath(); c.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); c.fill(); }
 
-// Building styles: a Victorian port street, red brick, stucco, stone, a
-// timber-framed pub. One style per span of 2-4 facades, seeded.
-const STYLES = [
-    { kind: 'brick', wall: '#9c4b3b', wall2: '#7c3a2e', trim: '#ead9bf', roof: '#4f5a6b', roofL: '#63708a', roof2: '#3a4452' },
-    { kind: 'timber', wall: '#e8dcc0', wall2: '#d2c3a0', trim: '#4a3220', roof: '#6d5047', roofL: '#866458', roof2: '#4f3a33' },
-    { kind: 'stone', wall: '#8e8c84', wall2: '#75736c', trim: '#dcd7cb', roof: '#59626f', roofL: '#6f7a8a', roof2: '#424b57' },
-    { kind: 'brick', wall: '#b45f49', wall2: '#95493a', trim: '#f3e7d0', roof: '#5a5464', roofL: '#71697e', roof2: '#443f4e' },
-    { kind: 'stucco', wall: '#d8c7a2', wall2: '#bfae8a', trim: '#3e4e6a', roof: '#4f5f5b', roofL: '#657772', roof2: '#3b4845' },
-];
+// Building styles. A level lists which of these its spans draw from (LEVELS
+// above); one style per span of 2-4 facades, seeded. `doors` gives a door
+// colour per facade (Dublin's painted doors), `doorRate` how many facades have one.
+const SLATE = { roof: '#4f5a6b', roofL: '#63708a', roof2: '#3a4452' };
+const STYLE_DEFS = {
+    brick: { kind: 'brick', wall: '#9c4b3b', wall2: '#7c3a2e', trim: '#ead9bf', ...SLATE },
+    brickDark: { kind: 'brick', wall: '#7a3a30', wall2: '#5e2c25', trim: '#e6dccb', roof: '#454c58', roofL: '#59616f', roof2: '#343a44' },
+    brickPlum: { kind: 'brick', wall: '#b45f49', wall2: '#95493a', trim: '#f3e7d0', roof: '#5a5464', roofL: '#71697e', roof2: '#443f4e' },
+    timber: { kind: 'timber', wall: '#e8dcc0', wall2: '#d2c3a0', trim: '#4a3220', roof: '#6d5047', roofL: '#866458', roof2: '#4f3a33' },
+    stone: { kind: 'stone', wall: '#8e8c84', wall2: '#75736c', trim: '#dcd7cb', roof: '#59626f', roofL: '#6f7a8a', roof2: '#424b57' },
+    sandstone: { kind: 'stone', wall: '#c9b58c', wall2: '#ad9a73', trim: '#f2ead6', roof: '#56606e', roofL: '#6b7686', roof2: '#414955' },
+    stucco: { kind: 'stucco', wall: '#d8c7a2', wall2: '#bfae8a', trim: '#3e4e6a', roof: '#4f5f5b', roofL: '#657772', roof2: '#3b4845' },
+    // Harbour-town terraces: pastel walls under a mix of slate, terracotta and weathered tile,
+    // so a daylit street is not one grey roof mass.
+    whitewash: { kind: 'stucco', wall: '#f1eee6', wall2: '#d9d4c8', trim: '#2f5f9a', ...SLATE },
+    pastelPink: { kind: 'stucco', wall: '#e8b4b8', wall2: '#cf9ba0', trim: '#fbf6ee', roof: '#a9584a', roofL: '#c06c5a', roof2: '#88463b' },
+    pastelBlue: { kind: 'stucco', wall: '#a9c8e3', wall2: '#90afca', trim: '#fbf6ee', roof: '#5b6a7c', roofL: '#73839a', roof2: '#46536a' },
+    pastelYellow: { kind: 'stucco', wall: '#f0d98a', wall2: '#d7c072', trim: '#fbf6ee', roof: '#8a5a3c', roofL: '#a16e4c', roof2: '#6e4630' },
+    pastelMint: { kind: 'stucco', wall: '#a8d8c0', wall2: '#8fbfa7', trim: '#fbf6ee', roof: '#6b6258', roofL: '#82786c', roof2: '#544c44' },
+    pastelLilac: { kind: 'stucco', wall: '#c6b4dc', wall2: '#ad9bc3', trim: '#fbf6ee', roof: '#9a4f45', roofL: '#b16356', roof2: '#7c3e36' },
+    georgian: { kind: 'brick', wall: '#a6533f', wall2: '#874230', trim: '#f4efe4', ...SLATE,
+        doors: ['#c62f2f', '#1f5fa8', '#2f8a4a', '#e2b33a', '#6a3f8f', '#1a1a1a'], doorRate: 0.55 },
+    mural: { kind: 'brick', wall: '#8f4436', wall2: '#713429', trim: '#e6dccb', ...SLATE, mural: true },
+};
+const STYLES = LV.styles.map((k) => STYLE_DEFS[k]);
 const AWNINGS = [['#d9442f', '#f4efe2'], ['#2f5f9a', '#f4efe2'], ['#3f7a4a', '#f4efe2'], ['#c9352c', '#f6e7b8']];
+
+// Time of day: the light map's base colour (multiplied over everything),
+// how strong the warm pools are, whether lamp heads bloom, how many windows are lit.
+const TIMES = {
+    day: { base: '#ffffff', pool: 0, bloom: 0, lit: 0.08, ship: 0, sun: 'rgba(255,232,190,0.16)' },
+    dusk: { base: '#ddd4d6', pool: 1, bloom: 1, lit: 0.6, ship: 1 },
+    night: { base: '#8f8fb0', pool: 1.2, bloom: 1.25, lit: 0.78, ship: 1.2 },
+};
+const TOD = TIMES[LV.time];
 const VENDOR_PALS = [
     { coat: '#6b4a2a', coat2: '#4a3220', pants: '#3a3a4a', skin: '#f0c9a0', hair: '#4a2e1a', hat: '#3a3f4a' },
     { coat: '#2a2a2e', coat2: '#1a1a1e', pants: '#2a2a3a', skin: '#f0c9a0', hair: '#2a1a10', hat: null },
@@ -528,7 +615,114 @@ function renderStatic(map) {
         if (isWalkable(t) || t === T.STALL) drawEdges(c, map, x, y);
     }
     drawQuayFurniture(c, map);
+    drawLandmark(c, LV.landmark);
+    if (LV.landmark === 'dome') drawCranes(c);
     return off;
+}
+
+/*
+ * The port's landmark, standing over the roofs in columns 0-1 (never an
+ * alley: pickColumns starts at column 2). Base at the bottom of row 5,
+ * the facade row above the main street. These are generic silhouettes in
+ * the style of each port, not drawings of the buildings.
+ */
+function drawLandmark(c, kind) {
+    const x0 = 0, w = 2 * TILE, base = LAYOUT.STREET_TOP * TILE;     // bottom edge, y = 192
+    const cx = x0 + w / 2;
+    const glow = [];
+    c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(x0 + 6, base - 4, w, 6);   // shadow at its foot
+    const stone = (col, col2, x, y, ww, hh) => {
+        c.fillStyle = col; c.fillRect(x, y, ww, hh);
+        c.fillStyle = col2; for (let r = y + 6; r < y + hh; r += 7) c.fillRect(x, r, ww, 1);
+        c.fillStyle = 'rgba(255,255,255,0.12)'; c.fillRect(x, y, 2, hh);
+        c.fillStyle = 'rgba(0,0,0,0.18)'; c.fillRect(x + ww - 3, y, 3, hh);
+    };
+    const clock = (x, y, r) => {
+        c.fillStyle = '#c9a646'; ellipse(c, x, y, r + 2, r + 2);
+        c.fillStyle = TOD.lit > 0.3 ? '#fff2c4' : '#f4efe2'; ellipse(c, x, y, r, r);
+        c.strokeStyle = '#2a2320'; c.lineWidth = 1.5;
+        c.beginPath(); c.moveTo(x, y); c.lineTo(x, y - r + 2); c.moveTo(x, y); c.lineTo(x + r - 3, y + 1); c.stroke();
+        glow.push({ x, y, r: 26 });
+    };
+    if (kind === 'clocktower') {                                       // London: a gothic clock tower
+        stone('#c9b58c', '#ad9a73', cx - 16, base - 150, 32, 150);
+        c.fillStyle = '#ad9a73'; for (let k = 0; k < 4; k++) c.fillRect(cx - 12 + k * 8, base - 140, 3, 120);
+        c.fillStyle = '#b8a57e'; c.fillRect(cx - 19, base - 112, 38, 34);
+        clock(cx, base - 95, 12);
+        c.fillStyle = '#3a4a3a'; c.beginPath(); c.moveTo(cx - 18, base - 150); c.lineTo(cx, base - 186); c.lineTo(cx + 18, base - 150); c.closePath(); c.fill();
+        c.fillStyle = '#c9a646'; c.fillRect(cx - 1, base - 192, 2, 8);
+    } else if (kind === 'lighthouse') {                                // Falmouth: a headland lighthouse
+        c.fillStyle = '#7f8f5a'; c.fillRect(x0, base - 40, w, 40);      // grassy headland
+        c.fillStyle = '#6a7a48'; for (let k = 0; k < 8; k++) c.fillRect(x0 + k * 8 + 2, base - 38 + (k % 3) * 9, 3, 3);
+        c.fillStyle = '#f4f4f0';
+        c.beginPath(); c.moveTo(cx - 13, base - 40); c.lineTo(cx - 9, base - 150); c.lineTo(cx + 9, base - 150); c.lineTo(cx + 13, base - 40); c.closePath(); c.fill();
+        c.fillStyle = '#c9352c'; c.fillRect(cx - 12, base - 95, 23, 14); c.fillRect(cx - 10, base - 132, 20, 10);
+        c.fillStyle = 'rgba(0,0,0,0.15)'; c.fillRect(cx + 4, base - 150, 6, 110);
+        c.fillStyle = '#2a2a2a'; c.fillRect(cx - 12, base - 154, 24, 4);
+        c.fillStyle = '#ffe9a0'; c.fillRect(cx - 7, base - 168, 14, 14);
+        c.fillStyle = '#2a2a2a'; c.fillRect(cx - 9, base - 170, 18, 3);
+        c.beginPath(); c.moveTo(cx - 9, base - 170); c.lineTo(cx, base - 180); c.lineTo(cx + 9, base - 170); c.closePath(); c.fill();
+        glow.push({ x: cx, y: base - 161, r: 40 });
+    } else if (kind === 'spires') {                                    // Cork: three gothic spires
+        stone('#8a8a86', '#737370', x0 + 2, base - 96, w - 4, 96);
+        c.fillStyle = '#4a5466'; c.fillRect(cx - 7, base - 70, 14, 28);    // rose window recess
+        c.fillStyle = '#d9a64a'; ellipse(c, cx, base - 60, 6, 6);
+        glow.push({ x: cx, y: base - 60, r: 18 });
+        for (const [sx, top, hw] of [[x0 + 10, base - 150, 9], [x0 + w - 10, base - 150, 9], [cx, base - 190, 12]]) {
+            stone('#8a8a86', '#737370', sx - hw, top + 40, hw * 2, base - 96 - top - 40 + 2);
+            c.fillStyle = '#6a6a68'; c.beginPath(); c.moveTo(sx - hw, top + 42); c.lineTo(sx, top); c.lineTo(sx + hw, top + 42); c.closePath(); c.fill();
+            c.fillStyle = '#c9a646'; c.fillRect(sx - 1, top - 6, 2, 7);
+        }
+    } else if (kind === 'castle') {                                    // Dublin: a round castle tower
+        stone('#8f8a80', '#76726a', cx - 22, base - 120, 44, 120);
+        c.fillStyle = 'rgba(0,0,0,0.2)'; c.fillRect(cx + 8, base - 120, 14, 120);
+        for (let k = 0; k < 5; k++) { c.fillStyle = '#8f8a80'; c.fillRect(cx - 22 + k * 10, base - 130, 6, 10); }
+        c.fillStyle = '#2a2a3a'; c.fillRect(cx - 4, base - 95, 8, 14); c.fillRect(cx - 4, base - 60, 8, 14);
+        c.fillStyle = '#f2c86a'; c.fillRect(cx - 3, base - 58, 6, 10);
+        glow.push({ x: cx, y: base - 53, r: 16 });
+        c.fillStyle = '#4a3a2a'; c.fillRect(cx, base - 160, 2, 32);
+        c.fillStyle = '#2f8a4a'; c.fillRect(cx + 2, base - 160, 14, 9);
+    } else if (kind === 'dome') {                                      // Belfast: a green copper dome
+        stone('#e2dccb', '#c9c2ae', x0 + 2, base - 70, w - 4, 70);
+        c.fillStyle = '#c9c2ae'; for (let k = 0; k < 5; k++) c.fillRect(x0 + 8 + k * 11, base - 66, 4, 56);
+        c.fillStyle = '#d6cfbc'; c.fillRect(cx - 16, base - 96, 32, 28);
+        c.fillStyle = '#4fa58a'; c.beginPath(); c.arc(cx, base - 96, 18, Math.PI, 0); c.fill();
+        c.fillStyle = 'rgba(255,255,255,0.25)'; c.fillRect(cx - 10, base - 108, 3, 10);
+        c.fillStyle = '#3d8670'; c.fillRect(cx - 4, base - 124, 8, 12);
+        c.beginPath(); c.arc(cx, base - 124, 4, Math.PI, 0); c.fill();
+        c.fillStyle = '#c9a646'; c.fillRect(cx - 1, base - 134, 2, 6);
+        if (TOD.lit > 0.3) for (let k = 0; k < 4; k++) { c.fillStyle = '#f6cf7a'; c.fillRect(x0 + 10 + k * 13, base - 40, 5, 8); glow.push({ x: x0 + 12 + k * 13, y: base - 36, r: 12 }); }
+    } else if (kind === 'liver') {                                     // Liverpool: twin clock towers with a bird on each
+        stone('#bdb6a4', '#a39d8c', x0 + 2, base - 100, w - 4, 100);
+        for (const tx of [x0 + 14, x0 + w - 14]) {
+            stone('#bdb6a4', '#a39d8c', tx - 10, base - 140, 20, 42);
+            clock(tx, base - 118, 7);
+            c.fillStyle = '#4fa58a'; c.beginPath(); c.arc(tx, base - 140, 10, Math.PI, 0); c.fill();
+            c.fillStyle = '#4fa58a'; c.fillRect(tx - 2, base - 158, 4, 8);
+            c.fillStyle = '#3d8670';                                   // the bird
+            c.beginPath(); c.moveTo(tx - 6, base - 162); c.lineTo(tx, base - 166); c.lineTo(tx + 6, base - 162); c.lineTo(tx, base - 158); c.closePath(); c.fill();
+        }
+        c.fillStyle = '#2a2a3a'; for (let r = 0; r < 4; r++) for (let k = 0; k < 4; k++) c.fillRect(x0 + 10 + k * 13, base - 90 + r * 20, 5, 9);
+    }
+    S.decor.landmarkGlow = glow;
+}
+
+/** Belfast's skyline: two yellow gantry cranes over the water, top right. */
+function drawCranes(c) {
+    for (const gx of [17 * TILE, 19 * TILE - 6]) {
+        const top = 6, bot = 4 * TILE;
+        c.fillStyle = 'rgba(0,0,0,0.22)'; c.fillRect(gx - 14, top + 18, 46, bot - top - 4);   // tall: the shadow falls well to the side
+        c.fillStyle = '#e8b52c';
+        c.fillRect(gx - 20, top, 6, bot - top); c.fillRect(gx + 14, top, 6, bot - top);
+        c.fillRect(gx - 26, top, 52, 8);
+        c.fillStyle = '#b88a1a';
+        for (let y = top + 16; y < bot; y += 18) { c.fillRect(gx - 20, y, 40, 2); }
+        c.strokeStyle = '#b88a1a'; c.lineWidth = 1.5;
+        c.beginPath(); for (let y = top + 8; y + 18 <= bot; y += 18) { c.moveTo(gx - 14, y); c.lineTo(gx + 14, y + 18); } c.stroke();
+        c.fillStyle = '#3a3f47'; c.fillRect(gx - 6, top - 2, 12, 10);                // the cab on the top beam
+        c.fillStyle = '#8fb8de'; c.fillRect(gx - 4, top, 8, 3);
+        c.fillStyle = 'rgba(255,255,255,0.3)'; c.fillRect(gx - 26, top, 52, 1);
+    }
 }
 
 function drawCobbles(c, px, py, x, y) {
@@ -542,7 +736,8 @@ function drawCobbles(c, px, py, x, y) {
             const hue = 220 + Math.floor(hash(x * 4 + k, y * 4 + r, 2) * 30);
             c.fillStyle = `hsl(${hue} 9% ${l}%)`;
             rr(c, sx + 1, sy + 1, 7, 6, 2); c.fill();
-            c.fillStyle = 'rgba(255,255,255,0.09)'; c.fillRect(sx + 2, sy + 1, 5, 1);
+            c.fillStyle = LV.weather === 'rain' ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.09)';   // wet stones shine
+            c.fillRect(sx + 2, sy + 1, 5, 1);
         }
     }
     const v = hash(x, y, 3);
@@ -550,7 +745,7 @@ function drawCobbles(c, px, py, x, y) {
         c.fillStyle = '#5f8a3c';
         const gx = px + 6 + Math.floor(hash(x, y, 4) * 18), gy = py + 6 + Math.floor(hash(x, y, 5) * 18);
         c.fillRect(gx, gy, 2, 4); c.fillRect(gx + 3, gy - 2, 2, 6); c.fillRect(gx + 6, gy + 1, 2, 3);
-    } else if (v > 0.95) {                                             // a puddle
+    } else if (v > (LV.weather === 'rain' ? 0.8 : 0.95)) {             // a puddle (more of them in the rain)
         c.fillStyle = 'rgba(140,170,210,0.28)';
         ellipse(c, px + 16, py + 18, 9, 4);
         c.fillStyle = 'rgba(255,255,255,0.18)'; c.fillRect(px + 12, py + 16, 5, 1);
@@ -605,8 +800,9 @@ function drawQuayFurniture(c, map) {
 }
 
 function drawWaterBase(c, px, py, x, y) {
-    const l = 23 + Math.floor(hash(x, y, 8) * 5);
-    c.fillStyle = `hsl(204 52% ${l}%)`; c.fillRect(px, py, TILE, TILE);
+    const [hue, sat, light] = LV.water;
+    const l = light + Math.floor(hash(x, y, 8) * 5);
+    c.fillStyle = `hsl(${hue} ${sat}% ${l}%)`; c.fillRect(px, py, TILE, TILE);
     c.fillStyle = 'rgba(0,0,0,0.08)';
     for (let r = 0; r < 4; r++) if (hash(x, y * 4 + r, 9) < 0.5) c.fillRect(px, py + r * 8 + 3, TILE, 2);
 }
@@ -651,16 +847,30 @@ function drawWall(c, px, py, x, y, st) {
         c.fillStyle = 'rgba(255,255,255,0.08)'; c.fillRect(px + 3, py + 9, 10, 6);
         c.fillStyle = 'rgba(0,0,0,0.06)'; c.fillRect(px + 18, py + 20, 12, 8);
     }
+    // a painted mural instead of windows, now and then (Belfast's Cathedral Quarter)
+    if (st.mural && hash(x, y, 30) < 0.45) {
+        const pal = ['#e04a5a', '#f2b544', '#3fa7d6', '#59c36a', '#9b5de5', '#f6f0d8'];
+        for (let k = 0; k < 6; k++) {
+            c.fillStyle = pal[Math.floor(hash(x + k, y, 31) * pal.length)];
+            const bx = px + 2 + Math.floor(hash(x, y + k, 32) * 20), by = py + 9 + Math.floor(hash(x + k, y + k, 33) * 14);
+            if (k % 2) ellipse(c, bx + 4, by + 4, 5, 4); else c.fillRect(bx, by, 9, 7);
+        }
+        c.fillStyle = 'rgba(0,0,0,0.12)'; c.fillRect(px, py + 8, TILE, TILE - 8);
+        return;
+    }
     // two windows, warm or dark
-    const lit1 = hash(x, y, 10) < 0.6, lit2 = hash(x, y, 11) < 0.6;
+    const lit1 = hash(x, y, 10) < TOD.lit, lit2 = hash(x, y, 11) < TOD.lit;
     drawWindow(c, px + 5, py + 10, lit1, st);
     drawWindow(c, px + 19, py + 10, lit2, st);
     if (lit1) S.decor.windows.push({ x: px + 9, y: py + 15 });
     if (lit2) S.decor.windows.push({ x: px + 23, y: py + 15 });
     // door or flower boxes
-    if (hash(x, y, 12) < 0.24) {
+    if (hash(x, y, 12) < (st.doorRate || 0.24)) {
+        const door = st.doors ? st.doors[Math.floor(hash(x, y, 34) * st.doors.length)] : '#3b2a1e';
         c.fillStyle = st.trim; c.fillRect(px + 11, py + 19, 11, 13);
-        c.fillStyle = '#3b2a1e'; c.fillRect(px + 12, py + 20, 9, 12);
+        if (st.doors) { c.beginPath(); c.arc(px + 16.5, py + 19, 5.5, Math.PI, 0); c.fill(); }   // fanlight
+        c.fillStyle = door; c.fillRect(px + 12, py + 20, 9, 12);
+        c.fillStyle = 'rgba(255,255,255,0.15)'; c.fillRect(px + 12, py + 20, 1, 12);
         c.fillStyle = '#e8b75a'; c.fillRect(px + 19, py + 26, 1, 1);
         c.fillStyle = '#8f877c'; c.fillRect(px + 10, py + 31, 13, 1);   // step
     } else {
@@ -788,18 +998,23 @@ function renderLight(map) {
     const off = document.createElement('canvas');
     off.width = WORLD_W; off.height = WORLD_H;
     const c = off.getContext('2d');
-    c.fillStyle = '#ddd4d6'; c.fillRect(0, 0, WORLD_W, WORLD_H);
+    c.fillStyle = TOD.base; c.fillRect(0, 0, WORLD_W, WORLD_H);
+    if (TOD.pool <= 0) return off;
     c.globalCompositeOperation = 'lighter';
+    const k = TOD.pool;
     const pool = (x, y, r, inner, mid) => {
         const g = c.createRadialGradient(x, y, 0, x, y, r);
         g.addColorStop(0, inner); g.addColorStop(0.4, mid); g.addColorStop(1, 'rgba(0,0,0,0)');
         c.fillStyle = g; c.fillRect(x - r, y - r, r * 2, r * 2);
     };
-    for (const l of S.decor.lamps) pool(l.x, l.y - 34, 105, 'rgba(255,225,170,0.95)', 'rgba(255,190,120,0.4)');
-    for (const w of S.decor.windows) pool(w.x, w.y + 6, 20, 'rgba(255,200,120,0.5)', 'rgba(255,180,100,0.18)');
-    for (const s of map.stalls) pool(s.x * TILE + 16, s.y * TILE + 16, 46, 'rgba(255,215,150,0.6)', 'rgba(255,190,120,0.25)');
+    const a = (v) => Math.min(1, v * k).toFixed(3);
+    for (const l of S.decor.lamps) pool(l.x, l.y - 34, 105, `rgba(255,225,170,${a(0.95)})`, `rgba(255,190,120,${a(0.4)})`);
+    for (const w of S.decor.windows) pool(w.x, w.y + 6, 20, `rgba(255,200,120,${a(0.5)})`, `rgba(255,180,100,${a(0.18)})`);
+    for (const s of map.stalls) pool(s.x * TILE + 16, s.y * TILE + 16, 46, `rgba(255,215,150,${a(0.6)})`, `rgba(255,190,120,${a(0.25)})`);
+    for (const g of S.decor.landmarkGlow || []) pool(g.x, g.y, g.r, `rgba(255,220,150,${a(0.8)})`, `rgba(255,200,120,${a(0.3)})`);
     const sh = map.ship;
-    pool((sh.x0 + sh.x1 + 1) * TILE / 2, (sh.y0 + sh.y1 + 1) * TILE / 2, 80, 'rgba(210,225,255,0.55)', 'rgba(180,200,255,0.2)');
+    if (TOD.ship) pool((sh.x0 + sh.x1 + 1) * TILE / 2, (sh.y0 + sh.y1 + 1) * TILE / 2, LV.vessel === 'liner' ? 80 : 50,
+        `rgba(210,225,255,${a(0.55)})`, `rgba(180,200,255,${a(0.2)})`);
     return off;
 }
 
@@ -842,27 +1057,59 @@ function drawLamp(c, l, time) {
     c.fillStyle = '#3a3f47'; c.fillRect(l.x - 1, l.y - 32, 1, 29);
     c.fillStyle = '#23262c'; c.fillRect(l.x - 5, l.y - 44, 11, 13);
     const flick = S.reduceMotion ? 1 : 0.92 + 0.08 * Math.sin(time / 97 + l.x);
-    c.fillStyle = `rgba(255,${Math.floor(205 * flick)},${Math.floor(110 * flick)},1)`; c.fillRect(l.x - 4, l.y - 43, 9, 11);
-    c.fillStyle = '#fff6d8'; c.fillRect(l.x - 2, l.y - 41, 5, 7);
+    if (TOD.bloom) {
+        c.fillStyle = `rgba(255,${Math.floor(205 * flick)},${Math.floor(110 * flick)},1)`; c.fillRect(l.x - 4, l.y - 43, 9, 11);
+        c.fillStyle = '#fff6d8'; c.fillRect(l.x - 2, l.y - 41, 5, 7);
+    } else {                                                           // switched off in daylight: clear glass
+        c.fillStyle = '#b9c8d4'; c.fillRect(l.x - 4, l.y - 43, 9, 11);
+        c.fillStyle = 'rgba(255,255,255,0.6)'; c.fillRect(l.x - 3, l.y - 42, 2, 9);
+    }
     c.fillStyle = '#23262c'; c.fillRect(l.x - 6, l.y - 46, 13, 3); c.fillRect(l.x - 1, l.y - 48, 3, 2);
 }
 
-function drawGoods(c, px, py, content) {
-    if (content === 0) {                                               // fish on ice
-        c.fillStyle = '#dfe9f2'; c.fillRect(px + 5, py, 22, 6);
-        c.fillStyle = '#8fb0c8'; c.fillRect(px + 7, py + 1, 7, 3); c.fillRect(px + 17, py + 2, 7, 3);
-        c.fillStyle = '#5a7a90'; c.fillRect(px + 13, py + 1, 2, 3); c.fillRect(px + 23, py + 2, 2, 3);
-    } else if (content === 1) {                                        // records
+/** What lies on a stall counter. kind comes from LEVELS[day].goods, by vendor index. */
+function drawGoods(c, px, py, kind) {
+    const f = (col, x, y, w, h) => { c.fillStyle = col; c.fillRect(px + x, py + y, w, h); };
+    switch (kind) {
+    case 'fish':
+        f('#dfe9f2', 5, 0, 22, 6); f('#8fb0c8', 7, 1, 7, 3); f('#8fb0c8', 17, 2, 7, 3); f('#5a7a90', 13, 1, 2, 3); f('#5a7a90', 23, 2, 2, 3); break;
+    case 'records':
         c.fillStyle = '#1a1a1a'; ellipse(c, px + 10, py + 3, 5, 5); ellipse(c, px + 21, py + 3, 5, 5);
-        c.fillStyle = '#c9352c'; ellipse(c, px + 10, py + 3, 2, 2);
-        c.fillStyle = '#2f5f9a'; ellipse(c, px + 21, py + 3, 2, 2);
-    } else if (content === 2) {                                        // notices
-        c.fillStyle = '#f4efe2'; c.fillRect(px + 6, py - 1, 9, 8); c.fillRect(px + 18, py, 9, 8);
-        c.fillStyle = '#5a5a6a'; c.fillRect(px + 8, py + 1, 5, 1); c.fillRect(px + 8, py + 3, 5, 1); c.fillRect(px + 20, py + 2, 5, 1);
-    } else {                                                           // folded maps
-        c.fillStyle = '#e8d9b0'; c.fillRect(px + 5, py, 10, 7); c.fillRect(px + 17, py + 1, 10, 6);
-        c.fillStyle = '#7fa35a'; c.fillRect(px + 7, py + 2, 3, 2); c.fillRect(px + 19, py + 3, 4, 2);
-        c.fillStyle = '#2f5f9a'; c.fillRect(px + 11, py + 1, 2, 5);
+        c.fillStyle = '#c9352c'; ellipse(c, px + 10, py + 3, 2, 2); c.fillStyle = '#2f5f9a'; ellipse(c, px + 21, py + 3, 2, 2); break;
+    case 'notices':
+        f('#f4efe2', 6, -1, 9, 8); f('#f4efe2', 18, 0, 9, 8); f('#5a5a6a', 8, 1, 5, 1); f('#5a5a6a', 8, 3, 5, 1); f('#5a5a6a', 20, 2, 5, 1); break;
+    case 'maps':
+        f('#e8d9b0', 5, 0, 10, 7); f('#e8d9b0', 17, 1, 10, 6); f('#7fa35a', 7, 2, 3, 2); f('#7fa35a', 19, 3, 4, 2); f('#2f5f9a', 11, 1, 2, 5); break;
+    case 'umbrellas':
+        for (const [x, col] of [[9, '#1a1a1a'], [16, '#c9352c'], [23, '#1f3f6e']]) { c.fillStyle = col; c.beginPath(); c.arc(px + x, py + 3, 4, Math.PI, 0); c.fill(); f('#5a4a3a', x, 3, 1, 4); } break;
+    case 'tickets':
+        f('#f6e7b8', 5, 1, 8, 5); f('#f6e7b8', 14, 0, 8, 5); f('#f6e7b8', 22, 2, 6, 4); f('#c9352c', 7, 3, 4, 1); f('#c9352c', 16, 2, 4, 1); break;
+    case 'flowers':
+        for (let k = 0; k < 5; k++) { f('#3f6b2e', 6 + k * 5, 2, 2, 5); f(['#e04a5a', '#f2b544', '#f27ab0', '#f6f0d8', '#9b5de5'][k], 5 + k * 5, 0, 4, 3); } break;
+    case 'tea':
+        f('#f4f4f0', 6, 1, 6, 5); f('#f4f4f0', 12, 3, 2, 2); f('#2f5f9a', 18, 0, 8, 6); f('#f4efe2', 19, 1, 6, 1); break;
+    case 'shells':
+        for (let k = 0; k < 4; k++) { c.fillStyle = ['#f6d6c8', '#f4efe2', '#e8b4b8', '#f0d98a'][k]; ellipse(c, px + 8 + k * 6, py + 3, 3, 2.5); } break;
+    case 'pasties':
+        for (const x of [9, 20]) { c.fillStyle = '#d9a64a'; c.beginPath(); c.arc(px + x, py + 5, 5, Math.PI, 0); c.fill(); f('#b8862f', x - 4, 1, 8, 1); } break;
+    case 'ropes':
+        c.strokeStyle = '#c9b48a'; c.lineWidth = 2; for (const x of [10, 21]) { c.beginPath(); c.arc(px + x, py + 3, 4, 0, Math.PI * 2); c.stroke(); } break;
+    case 'bells':
+        for (const x of [10, 21]) { c.fillStyle = '#c9a646'; c.beginPath(); c.moveTo(px + x - 4, py + 6); c.quadraticCurveTo(px + x, py - 4, px + x + 4, py + 6); c.closePath(); c.fill(); f('#8a6a1a', x - 1, 6, 2, 1); } break;
+    case 'tweed':
+        for (const [x, col] of [[5, '#8a6a4a'], [14, '#5a6b3b'], [22, '#7a3b3b']]) { f(col, x, 0, 7, 7); f('rgba(255,255,255,0.2)', x, 2, 7, 1); f('rgba(0,0,0,0.2)', x + 3, 0, 1, 7); } break;
+    case 'whistles':
+        f('#c9c9c9', 5, 1, 14, 2); f('#c9c9c9', 9, 4, 16, 2); f('#2a2a2a', 8, 1, 1, 2); f('#2a2a2a', 12, 4, 1, 2); f('#2a2a2a', 15, 4, 1, 2); break;
+    case 'books':
+        for (const [x, col] of [[5, '#7a3b3b'], [10, '#2f5f9a'], [15, '#3f7a4a'], [20, '#8a6a3f']]) { f(col, x, -1, 4, 8); f('#e6dccb', x + 1, 1, 2, 1); } break;
+    case 'keys':
+        for (const x of [8, 18]) { c.fillStyle = '#c9a646'; ellipse(c, px + x, py + 3, 3, 3); f('#c9a646', x + 2, 2, 7, 2); f('#c9a646', x + 7, 4, 1, 2); } break;
+    case 'tools':
+        f('#8a6a3f', 6, 4, 12, 2); f('#6a6a72', 16, 1, 4, 7); f('#8a6a3f', 20, 1, 2, 7); f('#6a6a72', 22, 1, 5, 3); break;
+    case 'paints':
+        for (const [x, col] of [[6, '#e04a5a'], [12, '#3fa7d6'], [18, '#f2b544'], [24, '#59c36a']]) { f('#d0d0d0', x, 1, 4, 6); f(col, x, 0, 4, 3); } break;
+    default:
+        f('#e8d9b0', 8, 1, 16, 5);
     }
 }
 
@@ -877,7 +1124,7 @@ function drawStall(c, s, time, got) {
     c.fillStyle = '#8a5a34'; c.fillRect(px + 1, py + 18, TILE - 2, 12);
     c.fillStyle = '#a8753f'; c.fillRect(px + 1, py + 18, TILE - 2, 3);
     c.fillStyle = '#5a3a22'; c.fillRect(px + 1, py + 29, TILE - 2, 1); c.fillRect(px + 1, py + 24, TILE - 2, 1);
-    drawGoods(c, px, py + 20, s.content);
+    drawGoods(c, px, py + 20, LV.goods[s.content]);
     // awning: stripes, scalloped hem, shadow under it
     c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(px - 1, py + 10, TILE + 2, 3);
     for (let k = 0; k < 7; k++) { c.fillStyle = k % 2 ? b : a; c.fillRect(px - 1 + k * 5, py - 3, 5, 13); }
@@ -886,7 +1133,7 @@ function drawStall(c, s, time, got) {
     c.fillStyle = 'rgba(255,255,255,0.25)'; c.fillRect(px - 1, py - 3, TILE + 2, 1);
     // a lantern under the awning
     c.fillStyle = '#23262c'; c.fillRect(px + TILE - 8, py + 10, 1, 3);
-    c.fillStyle = '#ffd37a'; c.fillRect(px + TILE - 10, py + 13, 5, 5);
+    c.fillStyle = TOD.bloom ? '#ffd37a' : '#c9b48a'; c.fillRect(px + TILE - 10, py + 13, 5, 5);
     // marker: a bouncing "!" bubble until collected, a coin after
     const bob = S.reduceMotion ? 0 : Math.sin(time / 300 + s.x) * 2;
     const my = py - 10 + bob;
@@ -898,7 +1145,54 @@ function drawStall(c, s, time, got) {
     }
 }
 
+/**
+ * The shore boat (the tender that runs passengers in at Falmouth and Dun
+ * Laoghaire) or the Thames sightseeing boat: smaller than the liner, moored
+ * right against the quay, rocking a little more.
+ */
+function drawSmallBoat(c, map, time) {
+    const sh = map.ship;
+    const y = sh.y0 * TILE;
+    const river = LV.vessel === 'riverboat';
+    const hx = sh.x0 * TILE + 4, hw = river ? 58 : 48;
+    const top = y - (river ? 22 : 6), bot = y + 3 * TILE + (river ? 18 : 2);
+    const sway = S.reduceMotion ? 0 : Math.sin(time / 700) * 2;
+    c.fillStyle = 'rgba(0,0,0,0.25)'; ellipse(c, hx + hw / 2 + 5, (top + bot) / 2 + 6, hw / 2 + 2, (bot - top) / 2);
+    c.save();
+    c.translate(0, sway);
+    c.beginPath();
+    c.moveTo(hx, bot - 8); c.lineTo(hx, top + 20); c.quadraticCurveTo(hx + hw / 2, top - 10, hx + hw, top + 20);
+    c.lineTo(hx + hw, bot - 8); c.quadraticCurveTo(hx + hw / 2, bot + 2, hx, bot - 8); c.closePath();
+    c.fillStyle = river ? '#1f3f6e' : '#f4f4ee'; c.fill();
+    c.strokeStyle = river ? '#c9a646' : '#c9352c'; c.lineWidth = 2; c.stroke();
+    if (river) {
+        // a long glass-roofed saloon
+        c.fillStyle = '#e8eef4'; rr(c, hx + 7, top + 22, hw - 14, bot - top - 40, 6); c.fill();
+        c.fillStyle = 'rgba(120,170,220,0.75)'; rr(c, hx + 10, top + 25, hw - 20, bot - top - 46, 5); c.fill();
+        c.fillStyle = 'rgba(255,255,255,0.45)';
+        for (let k = 0; k < 7; k++) c.fillRect(hx + 10, top + 30 + k * 14, hw - 20, 1);
+        c.fillStyle = '#c9a646'; c.fillRect(hx + hw / 2 - 1, top + 6, 2, 14);
+    } else {
+        // an open deck with benches under an orange canopy
+        c.fillStyle = '#d8c39a'; rr(c, hx + 6, top + 18, hw - 12, bot - top - 32, 5); c.fill();
+        c.fillStyle = '#8a6a3f'; for (let k = 0; k < 5; k++) c.fillRect(hx + 10, top + 26 + k * 14, hw - 20, 3);
+        c.fillStyle = '#e8862f'; rr(c, hx + 4, top + 24, hw - 8, 34, 4); c.fill();
+        c.fillStyle = 'rgba(255,255,255,0.3)'; c.fillRect(hx + 4, top + 24, hw - 8, 2);
+        c.fillStyle = '#f2a33a'; ellipse(c, hx + 3, top + 70, 3, 5); ellipse(c, hx + hw - 3, top + 70, 3, 5);
+    }
+    c.restore();
+    if (!S.reduceMotion) {
+        c.strokeStyle = 'rgba(255,255,255,0.3)'; c.lineWidth = 1;
+        const ph = Math.sin(time / 450) * 2;
+        c.beginPath(); c.moveTo(hx - 3, top + 22 + ph); c.quadraticCurveTo(hx + hw / 2, top - 6 + ph, hx + hw + 3, top + 22 + ph); c.stroke();
+    }
+    const gx = sh.dock.x * TILE + TILE - 6, gy = sh.gangway.y * TILE + 11, gl = hx - gx + 4;
+    c.fillStyle = '#8a6f4e'; c.fillRect(gx, gy, gl, 10);
+    c.fillStyle = '#5c4730'; c.fillRect(gx, gy + 4, gl, 1);
+}
+
 function drawShip(c, map, time) {
+    if (LV.vessel !== 'liner') { drawSmallBoat(c, map, time); return; }
     const sh = map.ship;
     const x = sh.x0 * TILE, y = sh.y0 * TILE, w = (sh.x1 - sh.x0 + 1) * TILE, h = (sh.y1 - sh.y0 + 1) * TILE;
     const sway = S.reduceMotion ? 0 : Math.sin(time / 900) * 1.5;
@@ -952,7 +1246,7 @@ function drawShip(c, map, time) {
     c.fillStyle = '#5c4730'; c.fillRect(gx, gy + 4, gl, 1);
     c.fillStyle = '#a89070'; c.fillRect(gx, gy, gl, 1);
     // name under the hull, from the day's hotel field
-    if (S.day && S.day.hotel) {
+    if (S.day && S.day.hotel && LV.vessel === 'liner') {
         c.fillStyle = 'rgba(0,0,0,0.5)'; c.font = '10px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'top';
         c.fillText(S.day.hotel, hx + hw / 2 + 1, bot + 5);
         c.fillStyle = '#fff'; c.fillText(S.day.hotel, hx + hw / 2, bot + 4);
@@ -974,6 +1268,7 @@ function drawWaterFx(c, map, time) {
         }
     }
     // the ship's lights on the water, below the hull
+    if (!TOD.ship || LV.vessel !== 'liner') return;
     const sh = map.ship;
     const x = sh.x0 * TILE, w = (sh.x1 - sh.x0 + 1) * TILE, y = (sh.y1 + 1) * TILE;
     c.fillStyle = 'rgba(255,240,200,0.14)';
@@ -1028,14 +1323,50 @@ function renderWorld(time) {
     // lighting: multiply the light map, then warm bloom at each lamp
     c.globalCompositeOperation = 'multiply';
     c.drawImage(S.light, 0, 0);
+    if (TOD.sun) {                                                     // daytime: a warm sunlit wash over everything
+        c.globalCompositeOperation = 'screen';
+        c.fillStyle = TOD.sun; c.fillRect(0, 0, WORLD_W, WORLD_H);
+    }
     c.globalCompositeOperation = 'lighter';
-    for (const l of S.decor.lamps) {
+    if (TOD.bloom) for (const l of S.decor.lamps) {
         const flick = S.reduceMotion ? 1 : 0.85 + 0.15 * Math.sin(time / 90 + l.x * 0.3);
         const g = c.createRadialGradient(l.x, l.y - 37, 0, l.x, l.y - 37, 34);
-        g.addColorStop(0, `rgba(255,205,130,${0.5 * flick})`); g.addColorStop(1, 'rgba(255,205,130,0)');
+        g.addColorStop(0, `rgba(255,205,130,${Math.min(1, 0.5 * flick * TOD.bloom)})`); g.addColorStop(1, 'rgba(255,205,130,0)');
         c.fillStyle = g; c.fillRect(l.x - 34, l.y - 71, 68, 68);
     }
     c.globalCompositeOperation = 'source-over';
+    if (LV.weather === 'rain') drawRain(c, time);
+}
+
+/**
+ * Rain: slanted streaks over the whole frame and rings spreading in the
+ * puddles. Positions come from a fixed seeded list, so it costs no allocation
+ * per frame. Under reduce motion the streaks stand still and the rings stop.
+ */
+let RAIN = null;
+function drawRain(c, time) {
+    if (!RAIN) {
+        const r = rng(4711);
+        RAIN = Array.from({ length: 170 }, () => ({ x: r() * WORLD_W, y: r() * WORLD_H, l: 8 + r() * 10, v: 0.45 + r() * 0.25 }));
+    }
+    const t = S.reduceMotion ? 0 : time;
+    c.strokeStyle = 'rgba(200,215,235,0.35)'; c.lineWidth = 1;
+    c.beginPath();
+    for (const d of RAIN) {
+        const y = (d.y + t * d.v) % (WORLD_H + 20) - 20;
+        const x = (d.x - (y * 0.25)) % WORLD_W;
+        const xx = x < 0 ? x + WORLD_W : x;
+        c.moveTo(xx, y); c.lineTo(xx - d.l * 0.25, y + d.l);
+    }
+    c.stroke();
+    if (S.reduceMotion) return;
+    c.strokeStyle = 'rgba(220,230,245,0.35)';
+    for (let k = 0; k < 14; k++) {
+        const ph = ((time / 900) + k * 0.37) % 1;
+        const rx = ((k * 157) % 17 + 1) * TILE + 12, ry = (6 + (k % 3)) * TILE + 10 + (k % 2) * 8;
+        c.beginPath(); c.ellipse(rx, ry, 2 + ph * 7, 1 + ph * 3, 0, 0, Math.PI * 2); c.globalAlpha = 1 - ph; c.stroke();
+    }
+    c.globalAlpha = 1;
 }
 
 // ---------- camera and display ----------
@@ -1162,7 +1493,8 @@ window.XOStreetWalk = { tick, state: S };     // debug handle: step the game fro
 async function boot() {
     setRM(S.reduceMotion);
     el.introSeed.textContent = String(S.seed);
-    for (let i = 0; i < 4; i++) { const im = new Image(); im.src = `assets/vendor${i}.webp`; }   // warm the cache
+    for (let i = 0; i < 4; i++) { const im = new Image(); im.src = `${ASSET_DIR}/vendor${i}.webp`; }   // warm the cache
+    document.documentElement.style.setProperty('--keyart', `url("${ASSET_DIR}/keyart.webp")`);
     try {
         const [level, price] = await Promise.all([loadLevel(TOUR_ID, BASE), loadPrice()]);
         S.level = level;
@@ -1174,6 +1506,7 @@ async function boot() {
         el.hudSub.textContent = `${S.stop ? S.stop.name : S.day.title}・第 ${S.day.day} 天 Day ${S.day.day}`;
         el.introSub.textContent = `${level.name}　${level.dateFull}　第 ${S.day.day} 天 Day ${S.day.day}：${S.day.title}`;
         fillCard();
+        renderPorts(level);
         el.start.disabled = false;
         requestAnimationFrame(frame);
     } catch (e) {
